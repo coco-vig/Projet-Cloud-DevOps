@@ -1,0 +1,64 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+.eggs/
+build/
+dist/
+pip-wheel-metadata/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.coverage.*
+.pyre/
+.pytype/
+.cache/
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Environment variables / secrets (never commit)
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.pfx
+*.crt
+secrets/
+**/secrets/
+**/*secret*
+**/*token*
+**/*credentials*
+
+# Logs
+*.log
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+*.docker.env
+
+# Kubernetes / Helm local
+kubeconfig
+.kube/
+*.kubeconfig
+
+# Local data / temp
+data/
+tmp/
+.cache/
