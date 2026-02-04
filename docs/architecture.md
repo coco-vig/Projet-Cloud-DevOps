@@ -16,18 +16,18 @@ flowchart LR
     C[Partenaires API]
   end
 
-  A -->|HTTP| I[Ingress NGINX]
-  B -->|HTTP| I
-  C -->|HTTP| I
+  A -->|"HTTP"| I[Ingress NGINX]
+  B -->|"HTTP"| I
+  C -->|"HTTP"| I
 
   I --> S[Service Kubernetes]
-  S --> D[Deployment: Flask API]
+  S --> D["Deployment: Flask API"]
 
-  D -->|cache TTL (mémoire)| M[(Cache en mémoire)]
-  D -->|read JSON/YAML| BS[Azure Blob Storage]
+  D -->|"cache TTL (mémoire)"| M[(Cache en mémoire)]
+  D -->|"read JSON/YAML"| BS[Azure Blob Storage]
 
-  D -->|logs| L[Stdout/Logs]
-  D -->|healthz/readyz| H[Probes k8s]
+  D -->|"logs"| L[Stdout/Logs]
+  D -->|"healthz/readyz"| H[Probes k8s]
 ```
 
 ## Composants
