@@ -1,18 +1,18 @@
 # Plateforme de diffusion de contenu statique (Cloud & DevOps)
 
-Ce dépôt implémente une plateforme **cloud-native** de diffusion de contenu statique (événements, actualités, FAQ) stocké dans **Azure Blob Storage**, exposé via une API REST (Flask) et déployé sur **AKS** avec une chaîne **CI/CD GitHub Actions**. fileciteturn1file2
+Ce dépôt implémente une plateforme **cloud-native** de diffusion de contenu statique (événements, actualités, FAQ) stocké dans **Azure Blob Storage**, exposé via une API REST (Flask) et déployé sur **AKS** avec une chaîne **CI/CD GitHub Actions**. 
 
 ## Objectifs (extraits du cahier des charges)
 
-- Lire des fichiers **JSON/YAML** depuis **Azure Blob Storage** fileciteturn1file2  
+- Lire des fichiers **JSON/YAML** depuis **Azure Blob Storage**   
 - Exposer les endpoints :
-  - `GET /api/events` — événements fileciteturn1file2  
-  - `GET /api/news` — actualités fileciteturn1file2  
-  - `GET /api/faq` — FAQ fileciteturn1file2  
-  - `GET /healthz` — vérification de vie fileciteturn1file2  
-  - `GET /readyz` — vérification de disponibilité fileciteturn1file2  
-- Mettre en place un cache mémoire avec **TTL** (ex : 60 s) fileciteturn1file2  
-- Fournir une interface web minimale pour visualiser les données fileciteturn1file2  
+  - `GET /api/events` — événements   
+  - `GET /api/news` — actualités   
+  - `GET /api/faq` — FAQ   
+  - `GET /healthz` — vérification de vie   
+  - `GET /readyz` — vérification de disponibilité   
+- Mettre en place un cache mémoire avec **TTL** (ex : 60 s)   
+- Fournir une interface web minimale pour visualiser les données   
 
 ## Architecture (étape 1)
 
@@ -28,7 +28,7 @@ Voir `docs/architecture.md` (schéma + explications).
 
 ## Stratégie Git
 
-Choix recommandé : **Trunk-based development** (branches courtes + PR vers `main`) — cohérent avec un pipeline déclenché à chaque push sur `main`. fileciteturn1file3
+Choix recommandé : **Trunk-based development** (branches courtes + PR vers `main`) — cohérent avec un pipeline déclenché à chaque push sur `main`. 
 
 Conventions proposées :
 - Branches : `feat/...`, `fix/...`, `docs/...`
@@ -39,7 +39,7 @@ Conventions proposées :
 Réponses attendues dans le rapport :
 1) Pourquoi cette stratégie Git ?  
 2) Comment garantir un historique lisible et maintenable ?  
-3) Quels fichiers ne doivent jamais être versionnés ? fileciteturn1file2  
+3) Quels fichiers ne doivent jamais être versionnés ?   
 
 Un guide prêt à copier est dans `docs/git-strategy.md`.
 
@@ -63,4 +63,4 @@ cp .env.example .env
 
 ## Docker / CI / AKS
 
-> À compléter dans les étapes suivantes (4 → 7). fileciteturn1file3
+> À compléter dans les étapes suivantes (4 → 7). 
