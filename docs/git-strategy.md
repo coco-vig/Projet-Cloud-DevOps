@@ -1,16 +1,16 @@
-# Stratégie Git (réponses prêtes pour le rapport)
+# Stratégie Git
 
-Le cahier des charges impose une stratégie **Trunk-based** ou **Git Flow**, ainsi qu’une justification et des règles de maintenabilité. fileciteturn1file2
+Le cahier des charges impose une stratégie **Trunk-based** ou **Git Flow**, ainsi qu’une justification et des règles de maintenabilité. 
 
 ## Choix : Trunk-based development
 
 **Pourquoi ?**
 - Adapté à un binôme et à un projet itératif : branches courtes, intégration fréquente.
-- C’est cohérent avec une CI/CD déclenchée à chaque push sur `main` (intégration continue). fileciteturn1file3
+- C’est cohérent avec une CI/CD déclenchée à chaque push sur `main` (intégration continue). 
 
 ## Comment garantir un historique lisible et maintenable ?
 
-Mesures proposées (à activer sur GitHub) :
+Mesures proposées :
 - PR obligatoire sur `main`, avec review (au moins 1 approbation).
 - Merge en **squash** (1 commit par feature/fix).
 - Conventions de commits (Conventional Commits) + noms de branches (`feat/`, `fix/`, `docs/`).
