@@ -1,6 +1,6 @@
 import os
 import json
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
 from azure.storage.blob import BlobServiceClient
 from cachetools import TTLCache
 
@@ -77,6 +77,11 @@ def readyz():
     """Vérification de disponibilité [cite: 40]"""
     # Ici on pourrait tester la connexion à Azure si on voulait être strict
     return jsonify({"status": "ready"}), 200
+
+@app.route('/')
+def home():
+    """Interface web minimale"""
+    return render_template('index.html')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001, debug=True)
