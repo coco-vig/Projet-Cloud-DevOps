@@ -7,8 +7,6 @@ L’application backend doit être en **Flask**, packagée en Docker, puis dépl
 
 ## Vue d’ensemble (diagramme)
 
-> Diagramme Mermaid (copiez/collez dans GitHub, VS Code, ou un rendu Mermaid en ligne)
-
 ```mermaid
 flowchart LR
   subgraph Clients
