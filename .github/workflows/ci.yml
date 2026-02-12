@@ -31,6 +31,10 @@ jobs:
           pip install -r app/requirements.txt
 
       - name: Exécution des tests
+        # CORRECTION ICI : on utilise 'python -m pytest' au lieu de 'pytest' tout court
+        run: python -m pytest
+
+      - name: Exécution des tests
         # Les tests tournent sans Azure grâce au mocking
         run: pytest
 
