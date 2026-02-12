@@ -3,18 +3,24 @@ from unittest.mock import MagicMock
 
 def test_healthz(client):
     """
-    Test obligatoire du Health Check 
+    Test obligatoire du Health Check
     Doit retourner 200 et un JSON status.
     """
     response = client.get('/healthz')
     assert response.status_code == 200
     assert response.json == {"status": "alive"}
 
-def test_get_events_mocked(client, mocker):
+def test_get_events_mocked(client, mocker, monkeypatch):
     """
     Test de /api/events sans connexion Azure.
     On utilise 'mocker' pour simuler la réponse d'Azure.
     """
+    # --- CORRECTION ICI ---
+    # On injecte une fausse clé dans la variable globale de l'app
+    # pour passer la vérification "if not AZURE_CONNECTION_STRING:"
+    monkeypatch.setattr('app.app.AZURE_CONNECTION_STRING', 'DefaultEndpointsProtocol=https;AccountName=test;AccountKey=test;EndpointSuffix=core.windows.net')
+    # ----------------------
+
     # 1. Données factices que le faux Azure va renvoyer
     fake_data = [{"id": 1, "title": "Event Test", "date": "2024-01-01"}]
     fake_json = json.dumps(fake_data).encode('utf-8')
