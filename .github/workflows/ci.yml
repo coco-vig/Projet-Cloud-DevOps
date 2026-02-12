@@ -1,0 +1,64 @@
+name: CI Pipeline
+
+# Déclenchement : à chaque push sur la branche main
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+# Permissions nécessaires pour écrire dans le registre GHCR
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  # JOB 1 : TEST & LINT
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v4
+
+      - name: Installation de Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Installation des dépendances
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r app/requirements.txt
+
+      - name: Exécution des tests
+        # Les tests tournent sans Azure grâce au mocking
+        run: pytest
+
+  # JOB 2 : BUILD & PUSH DOCKER
+  build-and-push:
+    needs: test # Ce job ne se lance que si les tests passent !
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v4
+
+      - name: Login à GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Transformation du nom en minuscules
+        run: |
+          echo "IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/mycloudapp" >> $GITHUB_ENV
+          # Docker déteste les majuscules, on force tout en minuscule ci-dessous
+          
+      - name: Build et Push de l'image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/mycloudapp:latest
+            ghcr.io/${{ github.repository_owner }}/mycloudapp:${{ github.sha }}
