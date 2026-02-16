@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mycloudapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mycloudapp
+  template:
+    metadata:
+      labels:
+        app: mycloudapp
+    spec:
+      containers:
+      - name: mycloudapp
+        image: ghcr.io/matthis-7/mycloudapp:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5000
+        env:
+        - name: AZURE_CONNECTION_STRING
+          valueFrom:
+            secretKeyRef:
+              name: app-secrets
+              key: azure-connection-string
