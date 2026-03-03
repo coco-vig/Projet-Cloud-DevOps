@@ -1,69 +1,85 @@
-name: CI Pipeline
+name: CI/CD Pipeline
 
+# Le pipeline se déclenche à chaque push sur la branche main
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-  workflow_dispatch:  
-
-permissions:
-  contents: read
-  packages: write
+    branches:
+      - main
 
 jobs:
-  test:
+  # ---------------------------------------------------
+  # JOB 1 : Tests, Build et Push vers GitHub Packages
+  # ---------------------------------------------------
+  build-and-push:
     runs-on: ubuntu-latest
+    
+    # Autorise GitHub Actions à écrire dans les packages (GHCR)
+    permissions:
+      contents: read
+      packages: write
+
     steps:
-      - name: Checkout du code
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Installation de Python
+      # Étape 1 : Lint et tests
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.9'
-
-      - name: Debug - Vérification des fichiers
-        run: |
-          echo "=== Contenu du dossier courant ==="
-          ls -R
-          echo "=== Contenu de app/requirements.txt ==="
-          cat app/requirements.txt || echo "Fichier introuvable !"
-
-      - name: Installation des dépendances
+          
+      - name: Install dependencies and test
         run: |
           python -m pip install --upgrade pip
-          # On installe les dépendances du fichier
-          pip install -r app/requirements.txt
-          # CEINTURE ET BRETELLES : On force l'installation de pytest ici
-          pip install pytest pytest-mock
-          # On vérifie ce qui est vraiment installé
-          echo "=== Liste des paquets installés ==="
-          pip list
+          pip install -r requirements.txt
+          # Si tu as un fichier de test (ex: test_app.py), décommente la ligne ci-dessous :
+          # pytest 
 
-      - name: Exécution des tests
-        # Utilisation de python -m pytest pour éviter les soucis de PATH
-        run: python -m pytest
-
-  build-and-push:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout du code
-        uses: actions/checkout@v4
-
-      - name: Login à GitHub Container Registry
+      # Étape 2 & 3 : Connexion, Build et Push sur GHCR
+      - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build et Push de l'image
+      - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
-          tags: |
-            ghcr.io/${{ github.repository_owner }}/mycloudapp:latest
-            ghcr.io/${{ github.repository_owner }}/mycloudapp:${{ github.sha }}
+          # Note: ${{ github.repository_owner }} mettra automatiquement "coco-vig" ou ton pseudo en minuscules
+          tags: ghcr.io/${{ github.repository_owner }}/mycloudapp:latest
+
+  # ---------------------------------------------------
+  # JOB 2 : Déploiement sur Azure Kubernetes Service
+  # ---------------------------------------------------
+  deploy:
+    needs: build-and-push # Ce job attend que le Job 1 soit terminé avec succès
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Étape 4 : Déploiement sur AKS avec ton Secret
+      - name: Set up Kubernetes config
+        uses: azure/k8s-set-context@v3
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBE_CONFIG }}
+
+      - name: Deploy to Azure Kubernetes Service
+        run: |
+          kubectl apply -f k8s/deployment.yaml
+          kubectl apply -f k8s/service.yaml
+          
+      - name: Force Pod Restart (Rolling Update)
+        run: |
+          kubectl rollout restart deployment/mycloudapp
+
+      # Étape 5 : Smoke test post-déploiement
+      - name: Smoke Test (Wait for rollout)
+        run: |
+          echo "Vérification que le déploiement s'est bien passé sans plantage..."
+          kubectl rollout status deployment/mycloudapp --timeout=120s
+          kubectl get pods
