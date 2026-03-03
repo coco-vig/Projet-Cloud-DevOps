@@ -32,8 +32,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r app/requirements.txt
-          # Si tu as un fichier de test (ex: test_app.py), décommente la ligne ci-dessous :
-          # pytest 
+          pytest
 
       # Étape 2 & 3 : Connexion, Build et Push sur GHCR
       - name: Log in to GitHub Container Registry
