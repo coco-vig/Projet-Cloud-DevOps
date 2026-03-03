@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: mycloudapp
-        image: ghcr.io/matthis-7/mycloudapp:latest
+        image: ghcr.io/coco-vig/mycloudapp:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 5000
