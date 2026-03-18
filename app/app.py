@@ -70,7 +70,7 @@ def get_faq():
 @app.route('/healthz', methods=['GET'])
 def healthz():
     """Vérification de vie [cite: 38]"""
-    return jsonify({"status": "alive"}), 200
+    return jsonify({"status": "test"}), 200
 
 @app.route('/readyz', methods=['GET'])
 def readyz():
